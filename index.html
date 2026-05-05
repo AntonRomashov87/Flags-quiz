@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌍 Прапори та Столиці Світу</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d1117;
@@ -44,6 +44,30 @@
       radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.2) 0%, transparent 100%),
       radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,0.25) 0%, transparent 100%),
       radial-gradient(1px 1px at 85% 90%, rgba(255,255,255,0.15) 0%, transparent 100%);
+  }
+
+  /* ==================== FLAG EMOJI ==================== */
+  .flag-display {
+    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif !important;
+    font-size: clamp(72px, 18vw, 110px);
+    line-height: 1.1;
+    margin: 8px 0 16px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    transition: transform 0.3s;
+    min-height: 1.2em;
+    display: block;
+  }
+  .flag-emoji-opt {
+    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .flag-emoji-sm {
+    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
   }
 
   /* ==================== SCREENS ==================== */
@@ -825,6 +849,11 @@ const COUNTRIES = [
   {n:"Тувалу",             c:"Фунафуті",       f:"🇹🇻", cont:"oceania"},
 ];
 
+// ==================== FLAG EMOJI HELPER ====================
+function flagEmoji(emoji, cls) {
+  return `<span class="${cls}">${emoji}</span>`;
+}
+
 // ==================== STATE ====================
 let gameMode = 'flags';
 let selectedConts = 'all';
@@ -957,8 +986,9 @@ function renderQuestion() {
 
   if (q.type === 'flag') {
     document.getElementById('q-type-badge').textContent = '🚩 Прапор країни';
-    document.getElementById('flag-display').style.display = 'block';
-    document.getElementById('flag-display').textContent = q.country.f;
+    const fd = document.getElementById('flag-display');
+    fd.style.display = 'block';
+    fd.textContent = q.country.f;
     document.getElementById('capital-display').style.display = 'none';
     document.getElementById('q-instruction').textContent = 'Яка це країна?';
   } else {
@@ -998,7 +1028,7 @@ function renderQuestion() {
       btn.onclick = () => selectAnswer(btn, opt, q);
       btn.innerHTML = `
         <span class="opt-letter">${letters[i]}</span>
-        ${q.type === 'capital' ? `<span class="option-flag">${opt.f}</span>` : ''}
+        ${q.type === 'capital' ? flagEmoji(opt.f, 'flag-emoji-opt') : ''}
         <span>${opt.n}</span>
       `;
       grid.appendChild(btn);
@@ -1157,7 +1187,7 @@ function updateAutocomplete(val) {
     const item = document.createElement('div');
     item.className = 'ac-item';
     item.dataset.idx = idx;
-    item.innerHTML = `<span class="ac-flag">${c.f}</span><span>${c.n}</span>`;
+    item.innerHTML = `${flagEmoji(c.f, 'flag-emoji-sm')}<span>${c.n}</span>`;
     item.onclick = () => { document.getElementById('hard-input').value = c.n; list.style.display = 'none'; list.innerHTML = ''; submitHardAnswer(); };
     list.appendChild(item);
   });
@@ -1280,7 +1310,7 @@ function showResults() {
     const what = h.type === 'flag' ? `${h.country.f} прапор` : `Столиця: ${h.country.c}`;
     const chosenStr = h.chosen ? h.chosen.n : '— час вийшов —';
     div.innerHTML = `
-      <span class="hist-flag">${h.country.f}</span>
+      <span class="hist-flag">${flagEmoji(h.country.f, 'flag-emoji-sm')}</span>
       <div class="hist-text">
         <div><strong>${h.country.n}</strong></div>
         <div class="hist-answer">${what}${!h.correct ? ` • Обрано: ${chosenStr}` : ''}</div>
