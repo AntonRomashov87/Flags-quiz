@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Прапори та Столиці Світу</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1f2937;
+    --gold: #e0c97f;
+    --gold2: #f5dfa0;
+    --gold3: #b8a050;
+    --text: #e8e6e1;
+    --text2: #9ca3af;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --accent: #3b82f6;
+    --border: rgba(224,201,127,0.2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(224,201,127,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.04) 0%, transparent 50%);
+  }
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 10%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 60%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 75%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 90%, rgba(255,255,255,0.15) 0%, transparent 100%);
+  }
+
+  /* ==================== SCREENS ==================== */
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 30px 16px 50px; }
+
+  /* ==================== WELCOME ==================== */
+  .logo-area { text-align: center; margin-bottom: 36px; }
+  .logo-globe { font-size: 64px; line-height: 1; margin-bottom: 12px; filter: drop-shadow(0 0 20px rgba(224,201,127,0.4)); }
+  .logo-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(22px, 5vw, 38px);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(224,201,127,0.3);
+    letter-spacing: 2px;
+    line-height: 1.2;
+  }
+  .logo-sub { font-size: 14px; color: var(--text2); margin-top: 8px; letter-spacing: 1px; }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold3);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  /* MODE SELECTOR */
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 500px; margin-bottom: 28px; }
+  .mode-btn {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    color: var(--text);
+  }
+  .mode-btn:hover { border-color: var(--gold3); transform: translateY(-2px); }
+  .mode-btn.selected { border-color: var(--gold); background: rgba(224,201,127,0.08); box-shadow: 0 0 20px rgba(224,201,127,0.15); }
+  .mode-icon { font-size: 32px; margin-bottom: 8px; }
+  .mode-label { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+  .mode-desc { font-size: 11px; color: var(--text2); margin-top: 4px; line-height: 1.4; }
+
+  /* CONTINENT SELECTOR */
+  .continent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 500px; margin-bottom: 10px; }
+  .cont-btn {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .cont-btn:hover { border-color: var(--gold3); }
+  .cont-btn.selected { border-color: var(--gold); background: rgba(224,201,127,0.08); }
+  .cont-icon { font-size: 24px; display: block; margin-bottom: 5px; }
+  .cont-name { font-size: 11px; font-weight: 700; color: var(--gold); }
+  .cont-count { font-size: 10px; color: var(--text2); margin-top: 2px; }
+  .all-btn {
+    background: var(--bg2); border: 2px solid var(--border); border-radius: 12px;
+    padding: 12px; cursor: pointer; text-align: center; transition: all 0.2s;
+    color: var(--text); grid-column: 1/-1; display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .all-btn:hover { border-color: var(--gold3); }
+  .all-btn.selected { border-color: var(--gold); background: rgba(224,201,127,0.08); }
+  .all-btn-text { font-size: 12px; font-weight: 700; color: var(--gold); }
+
+  /* DIFFICULTY */
+  .diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 500px; margin-bottom: 28px; }
+  .diff-btn {
+    background: var(--bg2); border: 2px solid var(--border); border-radius: 12px;
+    padding: 12px 8px; cursor: pointer; text-align: center; transition: all 0.2s; color: var(--text);
+  }
+  .diff-btn:hover { border-color: var(--gold3); }
+  .diff-btn.selected { border-color: var(--gold); background: rgba(224,201,127,0.08); }
+  .diff-label { font-size: 12px; font-weight: 700; color: var(--gold); }
+  .diff-desc { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+  /* START BTN */
+  .start-btn {
+    background: linear-gradient(135deg, var(--gold3), var(--gold));
+    color: var(--bg);
+    border: none;
+    border-radius: 14px;
+    padding: 16px 48px;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(224,201,127,0.3);
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(224,201,127,0.4); }
+  .start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ==================== QUIZ ==================== */
+  #quiz-screen { justify-content: flex-start; }
+  .quiz-header {
+    width: 100%; max-width: 600px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .quiz-back {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; font-size: 12px; color: var(--text2); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .quiz-back:hover { color: var(--gold); border-color: var(--gold3); }
+  .quiz-score-display {
+    font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .score-val { font-size: 20px; font-weight: 900; }
+
+  /* PROGRESS */
+  .progress-wrap { width: 100%; max-width: 600px; margin-bottom: 20px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold3), var(--gold)); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* QUESTION CARD */
+  .question-card {
+    width: 100%; max-width: 600px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(224,201,127,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .q-type-badge {
+    display: inline-block;
+    background: rgba(224,201,127,0.1);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--gold3);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .flag-display {
+    font-size: clamp(72px, 18vw, 110px);
+    line-height: 1;
+    margin: 8px 0 16px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    transition: transform 0.3s;
+  }
+  .capital-display {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 7vw, 48px);
+    font-weight: 700;
+    color: var(--gold);
+    margin: 12px 0 8px;
+    text-shadow: 0 0 20px rgba(224,201,127,0.3);
+  }
+  .q-instruction {
+    font-size: 14px; color: var(--text2); margin-top: 4px;
+  }
+
+  /* TIMER */
+  .timer-ring-wrap { position: absolute; top: 16px; right: 20px; }
+  .timer-ring { width: 44px; height: 44px; }
+  .timer-ring circle { fill: none; stroke-width: 3; }
+  .timer-ring .bg { stroke: var(--bg3); }
+  .timer-ring .fg { stroke: var(--gold); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s linear, stroke 0.5s; }
+  .timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+  /* OPTIONS */
+  .options-grid {
+    width: 100%; max-width: 600px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .option-btn {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 14px;
+    cursor: pointer;
+    text-align: left;
+    display: flex; align-items: center; gap: 12px;
+    transition: all 0.2s;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold3); background: rgba(224,201,127,0.05); transform: translateY(-1px); }
+  .option-btn:disabled { cursor: default; }
+  .opt-letter {
+    min-width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text2);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .option-btn.correct { border-color: var(--correct); background: rgba(34,197,94,0.1); }
+  .option-btn.correct .opt-letter { background: var(--correct); color: white; }
+  .option-btn.wrong { border-color: var(--wrong); background: rgba(239,68,68,0.1); }
+  .option-btn.wrong .opt-letter { background: var(--wrong); color: white; }
+  .option-flag { font-size: 20px; flex-shrink: 0; }
+
+  /* STREAK */
+  .streak-bar {
+    width: 100%; max-width: 600px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .streak-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--border);
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .streak-dot.correct { background: var(--correct); border-color: var(--correct); }
+  .streak-dot.wrong { background: var(--wrong); border-color: var(--wrong); }
+
+  /* FEEDBACK */
+  .feedback-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; opacity: 0; transition: opacity 0.3s;
+  }
+  .feedback-overlay.show { opacity: 1; }
+  .feedback-bubble {
+    padding: 18px 32px; border-radius: 20px;
+    font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700;
+    letter-spacing: 1px; transform: scale(0.8);
+    transition: transform 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  .feedback-overlay.show .feedback-bubble { transform: scale(1); }
+  .feedback-bubble.correct { background: var(--correct); color: white; }
+  .feedback-bubble.wrong { background: var(--wrong); color: white; }
+
+  /* ==================== RESULTS ==================== */
+  #results-screen { justify-content: center; }
+  .results-card {
+    width: 100%; max-width: 520px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 24px; padding: 36px 28px; text-align: center;
+  }
+  .results-emoji { font-size: 64px; margin-bottom: 12px; }
+  .results-title {
+    font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .results-sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+  .big-score {
+    font-family: 'Cinzel', serif;
+    font-size: 64px; font-weight: 900; color: var(--gold);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(224,201,127,0.4);
+  }
+  .big-score span { font-size: 28px; color: var(--text2); }
+  .results-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin: 24px 0;
+  }
+  .stat-box {
+    background: var(--bg3); border-radius: 12px; padding: 14px 10px; text-align: center;
+  }
+  .stat-num { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 10px; color: var(--text2); margin-top: 4px; letter-spacing: 0.5px; }
+  .stat-num.correct { color: var(--correct); }
+  .stat-num.wrong { color: var(--wrong); }
+  .stat-num.pct { color: var(--gold); }
+
+  /* History list */
+  .history-list { max-height: 250px; overflow-y: auto; margin-bottom: 20px; text-align: left; }
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-track { background: var(--bg3); border-radius: 2px; }
+  .history-list::-webkit-scrollbar-thumb { background: var(--gold3); border-radius: 2px; }
+  .hist-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 10px; margin-bottom: 5px;
+    font-size: 12px;
+  }
+  .hist-item.correct { background: rgba(34,197,94,0.08); }
+  .hist-item.wrong { background: rgba(239,68,68,0.08); }
+  .hist-flag { font-size: 20px; flex-shrink: 0; }
+  .hist-text { flex: 1; }
+  .hist-answer { color: var(--text2); font-size: 11px; }
+  .hist-icon { font-size: 14px; }
+
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn-secondary {
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+    border-radius: 12px; padding: 12px 24px; font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold3); color: var(--gold); }
+
+  /* ==================== HARD MODE INPUT ==================== */
+  .hard-input-wrap {
+    width: 100%; max-width: 600px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .hard-input-row { display: flex; gap: 10px; }
+  .hard-input {
+    flex: 1;
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    caret-color: var(--gold);
+  }
+  .hard-input:focus { border-color: var(--gold3); }
+  .hard-input.correct { border-color: var(--correct); background: rgba(34,197,94,0.08); }
+  .hard-input.wrong   { border-color: var(--wrong);   background: rgba(239,68,68,0.08); }
+  .hard-submit {
+    background: linear-gradient(135deg, var(--gold3), var(--gold));
+    color: var(--bg); border: none; border-radius: 14px;
+    padding: 16px 22px; font-family: 'Cinzel', serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(224,201,127,0.25);
+  }
+  .hard-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(224,201,127,0.4); }
+  .hard-submit:disabled { opacity: 0.4; cursor: default; transform: none; }
+  .hard-hint {
+    font-size: 11px; color: var(--text2); text-align: center; letter-spacing: 0.3px;
+  }
+  .autocomplete-list {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    max-height: 200px; overflow-y: auto;
+  }
+  .autocomplete-list::-webkit-scrollbar { width: 4px; }
+  .autocomplete-list::-webkit-scrollbar-thumb { background: var(--gold3); border-radius: 2px; }
+  .ac-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; cursor: pointer;
+    font-size: 13px; font-weight: 600;
+    transition: background 0.15s; color: var(--text);
+  }
+  .ac-item:hover, .ac-item.focused { background: rgba(224,201,127,0.1); color: var(--gold); }
+  .ac-flag { font-size: 18px; }
+  .hard-toggle-wrap {
+    width: 100%; max-width: 500px; margin-bottom: 28px;
+  }
+  .hard-toggle-btn {
+    width: 100%; background: var(--bg2); border: 2px solid var(--border);
+    border-radius: 14px; padding: 16px 20px; cursor: pointer;
+    display: flex; align-items: center; gap: 14px;
+    transition: all 0.25s; color: var(--text); text-align: left;
+  }
+  .hard-toggle-btn:hover { border-color: var(--wrong); }
+  .hard-toggle-btn.active {
+    border-color: #ef4444;
+    background: rgba(239,68,68,0.08);
+    box-shadow: 0 0 20px rgba(239,68,68,0.15);
+  }
+  .hard-icon { font-size: 28px; flex-shrink: 0; }
+  .hard-label { font-size: 14px; font-weight: 800; color: #ef4444; letter-spacing: 0.5px; }
+  .hard-desc  { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+  .hard-check {
+    margin-left: auto; width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--border); display: flex; align-items: center;
+    justify-content: center; font-size: 12px; transition: all 0.2s; flex-shrink: 0;
+  }
+  .hard-toggle-btn.active .hard-check { background: #ef4444; border-color: #ef4444; color: white; }
+
+  /* ==================== ANIMATIONS ==================== */
+  @keyframes pop { 0%{transform:scale(0.9);opacity:0} 100%{transform:scale(1);opacity:1} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+  .pop { animation: pop 0.3s ease forwards; }
+  .shake { animation: shake 0.4s ease; }
+
+  /* RESPONSIVE */
+  @media(max-width: 480px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .continent-grid { grid-template-columns: repeat(2, 1fr); }
+    .mode-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<!-- ==================== WELCOME SCREEN ==================== -->
+<div id="welcome-screen" class="screen active">
+  <div class="logo-area">
+    <div class="logo-globe">🌍</div>
+    <div class="logo-title">Прапори & Столиці</div>
+    <div class="logo-sub">Вікторина для знавців географії</div>
+  </div>
+
+  <p class="section-title">◆ Режим гри</p>
+  <div class="mode-grid">
+    <div class="mode-btn selected" data-mode="flags" onclick="selectMode('flags')">
+      <div class="mode-icon">🚩</div>
+      <div class="mode-label">Прапори</div>
+      <div class="mode-desc">Впізнай країну за прапором</div>
+    </div>
+    <div class="mode-btn" data-mode="capitals" onclick="selectMode('capitals')">
+      <div class="mode-icon">🏛️</div>
+      <div class="mode-label">Столиці</div>
+      <div class="mode-desc">Вкажи країну за столицею</div>
+    </div>
+    <div class="mode-btn" data-mode="both" onclick="selectMode('both')" style="grid-column:1/-1">
+      <div class="mode-icon">🎲</div>
+      <div class="mode-label">Змішаний режим</div>
+      <div class="mode-desc">Прапори та столиці разом</div>
+    </div>
+  </div>
+
+  <p class="section-title">◆ Континент</p>
+  <div class="continent-grid">
+    <div class="cont-btn" data-cont="europe" onclick="toggleContinent('europe')">
+      <span class="cont-icon">🌍</span>
+      <span class="cont-name">Європа</span>
+      <div class="cont-count">45 країн</div>
+    </div>
+    <div class="cont-btn" data-cont="asia" onclick="toggleContinent('asia')">
+      <span class="cont-icon">🌏</span>
+      <span class="cont-name">Азія</span>
+      <div class="cont-count">48 країн</div>
+    </div>
+    <div class="cont-btn" data-cont="africa" onclick="toggleContinent('africa')">
+      <span class="cont-icon">🌍</span>
+      <span class="cont-name">Африка</span>
+      <div class="cont-count">54 країни</div>
+    </div>
+    <div class="cont-btn" data-cont="americas" onclick="toggleContinent('americas')">
+      <span class="cont-icon">🌎</span>
+      <span class="cont-name">Америка</span>
+      <div class="cont-count">35 країн</div>
+    </div>
+    <div class="cont-btn" data-cont="oceania" onclick="toggleContinent('oceania')">
+      <span class="cont-icon">🌏</span>
+      <span class="cont-name">Океанія</span>
+      <div class="cont-count">14 країн</div>
+    </div>
+    <div class="all-btn selected" data-cont="all" onclick="selectAll()">
+      <span style="font-size:20px">🌐</span>
+      <span class="all-btn-text">Весь світ — всі 196 країн</span>
+    </div>
+  </div>
+
+  <p class="section-title" style="margin-top:24px">◆ Кількість запитань</p>
+  <div class="diff-grid" style="margin-bottom:28px">
+    <div class="diff-btn" data-q="10" onclick="selectQCount(10)">
+      <div class="diff-label">10</div>
+      <div class="diff-desc">Швидко</div>
+    </div>
+    <div class="diff-btn selected" data-q="20" onclick="selectQCount(20)">
+      <div class="diff-label">20</div>
+      <div class="diff-desc">Стандарт</div>
+    </div>
+    <div class="diff-btn" data-q="30" onclick="selectQCount(30)">
+      <div class="diff-label">30</div>
+      <div class="diff-desc">Серйозно</div>
+    </div>
+  </div>
+
+  <p class="section-title" style="margin-top:24px">◆ Складність</p>
+  <div class="hard-toggle-wrap">
+    <div class="hard-toggle-btn" id="hard-toggle-btn" onclick="toggleHardMode()">
+      <span class="hard-icon">💀</span>
+      <div>
+        <div class="hard-label">☠ ХАРД РЕЖИМ</div>
+        <div class="hard-desc">Без варіантів відповіді — вводиш назву країни вручну. 30 сек на питання. Лише для справжніх знавців!</div>
+      </div>
+      <div class="hard-check" id="hard-check"></div>
+    </div>
+  </div>
+
+  <button class="start-btn" id="start-btn" onclick="startGame()">▶ ПОЧАТИ ГРУ</button>
+</div>
+
+<!-- ==================== QUIZ SCREEN ==================== -->
+<div id="quiz-screen" class="screen">
+  <div class="quiz-header">
+    <button class="quiz-back" onclick="goHome()">← Меню</button>
+    <div class="quiz-score-display">
+      <span>✅</span>
+      <span class="score-val" id="score-live">0</span>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="q-counter">Питання 1 / 20</span>
+      <span id="correct-rate">0% правильно</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="streak-bar" id="streak-bar"></div>
+
+  <div class="question-card" id="question-card">
+    <div class="timer-ring-wrap">
+      <svg class="timer-ring" viewBox="0 0 44 44">
+        <circle class="bg" cx="22" cy="22" r="18"/>
+        <circle class="fg" id="timer-circle" cx="22" cy="22" r="18"/>
+      </svg>
+      <div class="timer-text" id="timer-text">15</div>
+    </div>
+    <div class="q-type-badge" id="q-type-badge">🚩 Прапор країни</div>
+    <div class="flag-display" id="flag-display">🌍</div>
+    <div class="capital-display" id="capital-display" style="display:none">—</div>
+    <div class="q-instruction" id="q-instruction">Яка це країна?</div>
+  </div>
+
+  <div class="options-grid" id="options-grid"></div>
+  <div class="hard-input-wrap" id="hard-input-wrap" style="display:none">
+    <div class="hard-input-row">
+      <input class="hard-input" id="hard-input" type="text" placeholder="Введи назву країни..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <button class="hard-submit" id="hard-submit" onclick="submitHardAnswer()">✓</button>
+    </div>
+    <div id="autocomplete-list" class="autocomplete-list" style="display:none"></div>
+    <div class="hard-hint" id="hard-hint">⌨️ Натисни Enter або кнопку — допускаються невеликі помилки</div>
+  </div>
+
+<!-- ==================== RESULTS SCREEN ==================== -->
+<div id="results-screen" class="screen">
+  <div class="results-card">
+    <div class="results-emoji" id="results-emoji">🏆</div>
+    <div class="results-title" id="results-title">Чудовий результат!</div>
+    <div class="results-sub" id="results-sub">Ти справжній знавець географії!</div>
+    <div class="big-score"><span id="r-score">0</span><span> / <span id="r-total">20</span></span></div>
+    <div class="results-stats">
+      <div class="stat-box">
+        <div class="stat-num correct" id="r-correct">0</div>
+        <div class="stat-label">✅ ПРАВИЛЬНО</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num wrong" id="r-wrong">0</div>
+        <div class="stat-label">❌ ПОМИЛОК</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num pct" id="r-pct">0%</div>
+        <div class="stat-label">📊 ТОЧНІСТЬ</div>
+      </div>
+    </div>
+    <div class="history-list" id="history-list"></div>
+    <div class="btn-row">
+      <button class="start-btn" onclick="restartGame()" style="padding:12px 28px;font-size:13px">🔄 Ще раз</button>
+      <button class="btn-secondary" onclick="goHome()">🏠 Меню</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="feedback-overlay" id="feedback-overlay">
+  <div class="feedback-bubble" id="feedback-bubble">✓</div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const COUNTRIES = [
+  // EUROPE (44 countries)
+  {n:"Україна",          c:"Київ",                f:"🇺🇦", cont:"europe"},
+  {n:"Франція",          c:"Париж",               f:"🇫🇷", cont:"europe"},
+  {n:"Німеччина",        c:"Берлін",              f:"🇩🇪", cont:"europe"},
+  {n:"Велика Британія",  c:"Лондон",              f:"🇬🇧", cont:"europe"},
+  {n:"Іспанія",          c:"Мадрид",              f:"🇪🇸", cont:"europe"},
+  {n:"Італія",           c:"Рим",                 f:"🇮🇹", cont:"europe"},
+  {n:"Польща",           c:"Варшава",             f:"🇵🇱", cont:"europe"},
+  {n:"Нідерланди",       c:"Амстердам",           f:"🇳🇱", cont:"europe"},
+  {n:"Бельгія",          c:"Брюссель",            f:"🇧🇪", cont:"europe"},
+  {n:"Швеція",           c:"Стокгольм",           f:"🇸🇪", cont:"europe"},
+  {n:"Норвегія",         c:"Осло",                f:"🇳🇴", cont:"europe"},
+  {n:"Фінляндія",        c:"Гельсінкі",           f:"🇫🇮", cont:"europe"},
+  {n:"Данія",            c:"Копенгаген",          f:"🇩🇰", cont:"europe"},
+  {n:"Португалія",       c:"Лісабон",             f:"🇵🇹", cont:"europe"},
+  {n:"Греція",           c:"Афіни",               f:"🇬🇷", cont:"europe"},
+  {n:"Австрія",          c:"Відень",              f:"🇦🇹", cont:"europe"},
+  {n:"Швейцарія",        c:"Берн",                f:"🇨🇭", cont:"europe"},
+  {n:"Чехія",            c:"Прага",               f:"🇨🇿", cont:"europe"},
+  {n:"Угорщина",         c:"Будапешт",            f:"🇭🇺", cont:"europe"},
+  {n:"Румунія",          c:"Бухарест",            f:"🇷🇴", cont:"europe"},
+  {n:"Болгарія",         c:"Софія",               f:"🇧🇬", cont:"europe"},
+  {n:"Хорватія",         c:"Загреб",              f:"🇭🇷", cont:"europe"},
+  {n:"Сербія",           c:"Белград",             f:"🇷🇸", cont:"europe"},
+  {n:"Словаччина",       c:"Братислава",          f:"🇸🇰", cont:"europe"},
+  {n:"Ірландія",         c:"Дублін",              f:"🇮🇪", cont:"europe"},
+  {n:"Литва",            c:"Вільнюс",             f:"🇱🇹", cont:"europe"},
+  {n:"Латвія",           c:"Рига",                f:"🇱🇻", cont:"europe"},
+  {n:"Естонія",          c:"Таллін",              f:"🇪🇪", cont:"europe"},
+  {n:"Молдова",          c:"Кишинів",             f:"🇲🇩", cont:"europe"},
+  {n:"Ісландія",         c:"Рейк'явік",           f:"🇮🇸", cont:"europe"},
+  {n:"Білорусь",         c:"Мінськ",              f:"🇧🇾", cont:"europe"},
+  {n:"Словенія",         c:"Любляна",             f:"🇸🇮", cont:"europe"},
+  {n:"Чорногорія",       c:"Подгориця",           f:"🇲🇪", cont:"europe"},
+  {n:"Пн. Македонія",    c:"Скоп'є",              f:"🇲🇰", cont:"europe"},
+  {n:"Боснія і Герц.",   c:"Сараєво",             f:"🇧🇦", cont:"europe"},
+  {n:"Албанія",          c:"Тирана",              f:"🇦🇱", cont:"europe"},
+  {n:"Косово",           c:"Пріштина",            f:"🇽🇰", cont:"europe"},
+  {n:"Люксембург",       c:"Люксембург",          f:"🇱🇺", cont:"europe"},
+  {n:"Мальта",           c:"Валлетта",            f:"🇲🇹", cont:"europe"},
+  {n:"Кіпр",             c:"Нікосія",             f:"🇨🇾", cont:"europe"},
+  {n:"Ліхтенштейн",      c:"Вадуц",               f:"🇱🇮", cont:"europe"},
+  {n:"Монако",           c:"Монако",              f:"🇲🇨", cont:"europe"},
+  {n:"Андорра",          c:"Андорра-ла-Велья",    f:"🇦🇩", cont:"europe"},
+  {n:"Сан-Марино",       c:"Сан-Марино",          f:"🇸🇲", cont:"europe"},
+  {n:"Ватикан",          c:"Ватикан",             f:"🇻🇦", cont:"europe"},
+  // ASIA (48 countries)
+  {n:"Японія",           c:"Токіо",              f:"🇯🇵", cont:"asia"},
+  {n:"Китай",            c:"Пекін",              f:"🇨🇳", cont:"asia"},
+  {n:"Індія",            c:"Нью-Делі",           f:"🇮🇳", cont:"asia"},
+  {n:"Пд. Корея",        c:"Сеул",               f:"🇰🇷", cont:"asia"},
+  {n:"Пн. Корея",        c:"Пхеньян",            f:"🇰🇵", cont:"asia"},
+  {n:"В'єтнам",          c:"Ханой",              f:"🇻🇳", cont:"asia"},
+  {n:"Таїланд",          c:"Бангкок",            f:"🇹🇭", cont:"asia"},
+  {n:"Індонезія",        c:"Джакарта",           f:"🇮🇩", cont:"asia"},
+  {n:"Малайзія",         c:"Куала-Лумпур",       f:"🇲🇾", cont:"asia"},
+  {n:"Філіппіни",        c:"Маніла",             f:"🇵🇭", cont:"asia"},
+  {n:"Пакистан",         c:"Ісламабад",          f:"🇵🇰", cont:"asia"},
+  {n:"Бангладеш",        c:"Дакка",              f:"🇧🇩", cont:"asia"},
+  {n:"Іран",             c:"Тегеран",            f:"🇮🇷", cont:"asia"},
+  {n:"Ірак",             c:"Багдад",             f:"🇮🇶", cont:"asia"},
+  {n:"Саудівська Аравія",c:"Ер-Ріяд",            f:"🇸🇦", cont:"asia"},
+  {n:"Туреччина",        c:"Анкара",             f:"🇹🇷", cont:"asia"},
+  {n:"Ізраїль",          c:"Єрусалим",           f:"🇮🇱", cont:"asia"},
+  {n:"Йорданія",         c:"Амман",              f:"🇯🇴", cont:"asia"},
+  {n:"ОАЕ",             c:"Абу-Дабі",            f:"🇦🇪", cont:"asia"},
+  {n:"Сирія",            c:"Дамаск",             f:"🇸🇾", cont:"asia"},
+  {n:"Казахстан",        c:"Астана",             f:"🇰🇿", cont:"asia"},
+  {n:"Узбекистан",       c:"Ташкент",            f:"🇺🇿", cont:"asia"},
+  {n:"Грузія",           c:"Тбілісі",            f:"🇬🇪", cont:"asia"},
+  {n:"Азербайджан",      c:"Баку",               f:"🇦🇿", cont:"asia"},
+  {n:"Вірменія",         c:"Єреван",             f:"🇦🇲", cont:"asia"},
+  {n:"Монголія",         c:"Улан-Батор",         f:"🇲🇳", cont:"asia"},
+  {n:"Непал",            c:"Катманду",           f:"🇳🇵", cont:"asia"},
+  {n:"Камбоджа",         c:"Пномпень",           f:"🇰🇭", cont:"asia"},
+  {n:"Сінгапур",         c:"Сінгапур",           f:"🇸🇬", cont:"asia"},
+  {n:"Афганістан",       c:"Кабул",              f:"🇦🇫", cont:"asia"},
+  {n:"Лаос",             c:"В'єнтьян",           f:"🇱🇦", cont:"asia"},
+  {n:"М'янма",           c:"Нейп'їдо",           f:"🇲🇲", cont:"asia"},
+  {n:"Шрі-Ланка",        c:"Шрі-Джаяварденепура",f:"🇱🇰", cont:"asia"},
+  {n:"Таджикистан",      c:"Душанбе",            f:"🇹🇯", cont:"asia"},
+  {n:"Туркменістан",     c:"Ашгабат",            f:"🇹🇲", cont:"asia"},
+  {n:"Киргизстан",       c:"Бішкек",             f:"🇰🇬", cont:"asia"},
+  {n:"Ліван",            c:"Бейрут",             f:"🇱🇧", cont:"asia"},
+  {n:"Кувейт",           c:"Кувейт",             f:"🇰🇼", cont:"asia"},
+  {n:"Катар",            c:"Доха",               f:"🇶🇦", cont:"asia"},
+  {n:"Оман",             c:"Маскат",             f:"🇴🇲", cont:"asia"},
+  {n:"Бахрейн",          c:"Манама",             f:"🇧🇭", cont:"asia"},
+  {n:"Єменʼ",            c:"Сана",               f:"🇾🇪", cont:"asia"},
+  {n:"Бутан",            c:"Тхімпху",            f:"🇧🇹", cont:"asia"},
+  {n:"Мальдіви",         c:"Мале",               f:"🇲🇻", cont:"asia"},
+  {n:"Бруней",           c:"Бандар-Сері-Бегаван",f:"🇧🇳", cont:"asia"},
+  {n:"Тімор-Лешті",      c:"Ділі",               f:"🇹🇱", cont:"asia"},
+  {n:"Палестина",        c:"Рамалла",            f:"🇵🇸", cont:"asia"},
+  {n:"Кіпр",             c:"Нікосія",            f:"🇨🇾", cont:"asia"},
+  // AFRICA (54 countries)
+  {n:"Єгипет",              c:"Каїр",           f:"🇪🇬", cont:"africa"},
+  {n:"Нігерія",             c:"Абуджа",         f:"🇳🇬", cont:"africa"},
+  {n:"ПАР",                 c:"Преторія",       f:"🇿🇦", cont:"africa"},
+  {n:"Кенія",               c:"Найробі",        f:"🇰🇪", cont:"africa"},
+  {n:"Ефіопія",             c:"Аддис-Абеба",    f:"🇪🇹", cont:"africa"},
+  {n:"Гана",                c:"Аккра",          f:"🇬🇭", cont:"africa"},
+  {n:"Танзанія",            c:"Додома",         f:"🇹🇿", cont:"africa"},
+  {n:"Марокко",             c:"Рабат",          f:"🇲🇦", cont:"africa"},
+  {n:"Алжир",               c:"Алжир",          f:"🇩🇿", cont:"africa"},
+  {n:"Туніс",               c:"Туніс",          f:"🇹🇳", cont:"africa"},
+  {n:"Лівія",               c:"Тріполі",        f:"🇱🇾", cont:"africa"},
+  {n:"Судан",               c:"Хартум",         f:"🇸🇩", cont:"africa"},
+  {n:"Пд. Судан",           c:"Джуба",          f:"🇸🇸", cont:"africa"},
+  {n:"Сенегал",             c:"Дакар",          f:"🇸🇳", cont:"africa"},
+  {n:"Камерун",             c:"Яунде",          f:"🇨🇲", cont:"africa"},
+  {n:"Кот-д'Івуар",         c:"Ямусукро",       f:"🇨🇮", cont:"africa"},
+  {n:"Мадагаскар",          c:"Антананаріву",   f:"🇲🇬", cont:"africa"},
+  {n:"Мозамбік",            c:"Мапуту",         f:"🇲🇿", cont:"africa"},
+  {n:"Ангола",              c:"Луанда",         f:"🇦🇴", cont:"africa"},
+  {n:"Замбія",              c:"Лусака",         f:"🇿🇲", cont:"africa"},
+  {n:"Зімбабве",            c:"Гарар",          f:"🇿🇼", cont:"africa"},
+  {n:"ДР Конго",            c:"Кіншаса",        f:"🇨🇩", cont:"africa"},
+  {n:"Республіка Конго",    c:"Браззавіль",     f:"🇨🇬", cont:"africa"},
+  {n:"Уганда",              c:"Кампала",        f:"🇺🇬", cont:"africa"},
+  {n:"Руанда",              c:"Кігалі",         f:"🇷🇼", cont:"africa"},
+  {n:"Бурунді",             c:"Гітега",         f:"🇧🇮", cont:"africa"},
+  {n:"Малаві",              c:"Лілонгве",       f:"🇲🇼", cont:"africa"},
+  {n:"Намібія",             c:"Віндгук",        f:"🇳🇦", cont:"africa"},
+  {n:"Ботсвана",            c:"Габороне",       f:"🇧🇼", cont:"africa"},
+  {n:"Лесото",              c:"Масеру",         f:"🇱🇸", cont:"africa"},
+  {n:"Есватіні",            c:"Мбабане",        f:"🇸🇿", cont:"africa"},
+  {n:"Малі",                c:"Бамако",         f:"🇲🇱", cont:"africa"},
+  {n:"Буркіна-Фасо",        c:"Уагадугу",       f:"🇧🇫", cont:"africa"},
+  {n:"Нігер",               c:"Ніамей",         f:"🇳🇪", cont:"africa"},
+  {n:"Чад",                 c:"Нджамена",       f:"🇹🇩", cont:"africa"},
+  {n:"Мавританія",          c:"Нуакшот",        f:"🇲🇷", cont:"africa"},
+  {n:"Гамбія",              c:"Банжул",         f:"🇬🇲", cont:"africa"},
+  {n:"Гвінея-Бісау",        c:"Бісау",          f:"🇬🇼", cont:"africa"},
+  {n:"Гвінея",              c:"Конакрі",        f:"🇬🇳", cont:"africa"},
+  {n:"Сьєрра-Леоне",        c:"Фрітаун",        f:"🇸🇱", cont:"africa"},
+  {n:"Ліберія",             c:"Монровія",       f:"🇱🇷", cont:"africa"},
+  {n:"Того",                c:"Ломе",           f:"🇹🇬", cont:"africa"},
+  {n:"Бенін",               c:"Порто-Ново",     f:"🇧🇯", cont:"africa"},
+  {n:"ЦАР",                 c:"Банги",          f:"🇨🇫", cont:"africa"},
+  {n:"Габон",               c:"Лібревіль",      f:"🇬🇦", cont:"africa"},
+  {n:"Екв. Гвінея",         c:"Малабо",         f:"🇬🇶", cont:"africa"},
+  {n:"Сан-Томе і Прінсіпі", c:"Сан-Томе",       f:"🇸🇹", cont:"africa"},
+  {n:"Джибуті",             c:"Джибуті",        f:"🇩🇯", cont:"africa"},
+  {n:"Еритрея",             c:"Асмара",         f:"🇪🇷", cont:"africa"},
+  {n:"Сомалі",              c:"Могадішо",       f:"🇸🇴", cont:"africa"},
+  {n:"Коморські о-ви",      c:"Моронь",         f:"🇰🇲", cont:"africa"},
+  {n:"Маврикій",            c:"Порт-Луї",       f:"🇲🇺", cont:"africa"},
+  {n:"Сейшельські о-ви",    c:"Вікторія",       f:"🇸🇨", cont:"africa"},
+  {n:"Кабо-Верде",          c:"Прая",           f:"🇨🇻", cont:"africa"},
+  // AMERICAS (35 countries)
+  {n:"США",               c:"Вашингтон",      f:"🇺🇸", cont:"americas"},
+  {n:"Канада",             c:"Оттава",         f:"🇨🇦", cont:"americas"},
+  {n:"Мексика",            c:"Мехіко",         f:"🇲🇽", cont:"americas"},
+  {n:"Бразилія",           c:"Бразиліа",       f:"🇧🇷", cont:"americas"},
+  {n:"Аргентина",          c:"Буенос-Айрес",   f:"🇦🇷", cont:"americas"},
+  {n:"Чилі",               c:"Сантьяго",       f:"🇨🇱", cont:"americas"},
+  {n:"Колумбія",           c:"Богота",         f:"🇨🇴", cont:"americas"},
+  {n:"Перу",               c:"Ліма",           f:"🇵🇪", cont:"americas"},
+  {n:"Венесуела",          c:"Каракас",        f:"🇻🇪", cont:"americas"},
+  {n:"Куба",               c:"Гавана",         f:"🇨🇺", cont:"americas"},
+  {n:"Болівія",            c:"Сукре",          f:"🇧🇴", cont:"americas"},
+  {n:"Еквадор",            c:"Кіто",           f:"🇪🇨", cont:"americas"},
+  {n:"Парагвай",           c:"Асунсьйон",      f:"🇵🇾", cont:"americas"},
+  {n:"Уругвай",            c:"Монтевідео",     f:"🇺🇾", cont:"americas"},
+  {n:"Гватемала",          c:"Гватемала",      f:"🇬🇹", cont:"americas"},
+  {n:"Ямайка",             c:"Кінгстон",       f:"🇯🇲", cont:"americas"},
+  {n:"Гаїті",              c:"Порт-о-Пренс",   f:"🇭🇹", cont:"americas"},
+  {n:"Домінікана",         c:"Санто-Домінго",  f:"🇩🇴", cont:"americas"},
+  {n:"Гондурас",           c:"Тегусігальпа",   f:"🇭🇳", cont:"americas"},
+  {n:"Сальвадор",          c:"Сан-Сальвадор",  f:"🇸🇻", cont:"americas"},
+  {n:"Нікарагуа",          c:"Манагуа",        f:"🇳🇮", cont:"americas"},
+  {n:"Коста-Рика",         c:"Сан-Хосе",       f:"🇨🇷", cont:"americas"},
+  {n:"Панама",             c:"Панама",         f:"🇵🇦", cont:"americas"},
+  {n:"Беліз",              c:"Бельмопан",      f:"🇧🇿", cont:"americas"},
+  {n:"Суринам",            c:"Парамарибо",     f:"🇸🇷", cont:"americas"},
+  {n:"Гаяна",              c:"Джорджтаун",     f:"🇬🇾", cont:"americas"},
+  {n:"Тринідад і Тобаго",  c:"Порт-оф-Спейн", f:"🇹🇹", cont:"americas"},
+  {n:"Багамські о-ви",     c:"Нассау",         f:"🇧🇸", cont:"americas"},
+  {n:"Барбадос",           c:"Бриджтаун",      f:"🇧🇧", cont:"americas"},
+  {n:"Гренада",            c:"Сент-Джорджес",  f:"🇬🇩", cont:"americas"},
+  {n:"Домініка",           c:"Розо",           f:"🇩🇲", cont:"americas"},
+  {n:"Сент-Люсія",         c:"Кастрі",         f:"🇱🇨", cont:"americas"},
+  {n:"Антигуа і Барбуда",  c:"Сент-Джонс",     f:"🇦🇬", cont:"americas"},
+  {n:"Сент-Кітс і Невіс",  c:"Бастер",         f:"🇰🇳", cont:"americas"},
+  {n:"Сент-Вінсент",       c:"Кінгстаун",      f:"🇻🇨", cont:"americas"},
+  // OCEANIA (14 countries)
+  {n:"Австралія",          c:"Канберра",       f:"🇦🇺", cont:"oceania"},
+  {n:"Нова Зеландія",      c:"Веллінгтон",     f:"🇳🇿", cont:"oceania"},
+  {n:"Папуа Нова Гвінея",  c:"Порт-Морсбі",   f:"🇵🇬", cont:"oceania"},
+  {n:"Фіджі",              c:"Сува",           f:"🇫🇯", cont:"oceania"},
+  {n:"Соломонові о-ви",    c:"Хоніара",        f:"🇸🇧", cont:"oceania"},
+  {n:"Вануату",            c:"Порт-Віла",      f:"🇻🇺", cont:"oceania"},
+  {n:"Самоа",              c:"Апіа",           f:"🇼🇸", cont:"oceania"},
+  {n:"Тонга",              c:"Нукуалофа",      f:"🇹🇴", cont:"oceania"},
+  {n:"Кірибаті",           c:"Тарава",         f:"🇰🇮", cont:"oceania"},
+  {n:"Маршаллові о-ви",    c:"Маджуро",        f:"🇲🇭", cont:"oceania"},
+  {n:"Мікронезія",         c:"Паліків",        f:"🇫🇲", cont:"oceania"},
+  {n:"Науру",              c:"Ярен",           f:"🇳🇷", cont:"oceania"},
+  {n:"Палау",              c:"Нгерулмуд",      f:"🇵🇼", cont:"oceania"},
+  {n:"Тувалу",             c:"Фунафуті",       f:"🇹🇻", cont:"oceania"},
+];
+
+// ==================== STATE ====================
+let gameMode = 'flags';
+let selectedConts = 'all';
+let qCount = 20;
+let hardMode = false;
+let questions = [];
+let current = 0;
+let score = 0;
+let answered = false;
+let history = [];
+let timerInterval = null;
+let timerVal = 15;
+const TIMER_MAX = 15;
+const TIMER_MAX_HARD = 30;
+const CIRCUMFERENCE = 2 * Math.PI * 18; // r=18
+
+// ==================== WELCOME LOGIC ====================
+function selectMode(m) {
+  gameMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('selected', b.dataset.mode === m));
+}
+
+function toggleContinent(c) {
+  // Deselect "all"
+  document.querySelector('.all-btn').classList.remove('selected');
+  const btn = document.querySelector(`.cont-btn[data-cont="${c}"]`);
+  btn.classList.toggle('selected');
+  const selected = [...document.querySelectorAll('.cont-btn.selected')].map(b => b.dataset.cont);
+  selectedConts = selected.length ? selected : 'all';
+  if (!selected.length) {
+    document.querySelector('.all-btn').classList.add('selected');
+    selectedConts = 'all';
+  }
+}
+
+function selectAll() {
+  selectedConts = 'all';
+  document.querySelectorAll('.cont-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector('.all-btn').classList.add('selected');
+}
+
+function selectQCount(n) {
+  qCount = n;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.toggle('selected', +b.dataset.q === n));
+}
+
+function toggleHardMode() {
+  hardMode = !hardMode;
+  document.getElementById('hard-toggle-btn').classList.toggle('active', hardMode);
+  document.getElementById('hard-check').textContent = hardMode ? '✓' : '';
+}
+
+// ==================== GAME LOGIC ====================
+function getPool() {
+  if (selectedConts === 'all') return COUNTRIES;
+  return COUNTRIES.filter(c => selectedConts.includes(c.cont));
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestions(pool, count) {
+  const shuffled = shuffle(pool);
+  const qs = [];
+  const actual = Math.min(count, shuffled.length);
+  for (let i = 0; i < actual; i++) {
+    const country = shuffled[i];
+    let type;
+    if (gameMode === 'flags') type = 'flag';
+    else if (gameMode === 'capitals') type = 'capital';
+    else type = Math.random() < 0.5 ? 'flag' : 'capital';
+    // Distractors: 3 random others from same pool or whole list
+    const others = shuffle(COUNTRIES.filter(c => c.n !== country.n)).slice(0, 3);
+    const opts = shuffle([country, ...others]);
+    qs.push({ country, type, opts });
+  }
+  return qs;
+}
+
+function startGame() {
+  const pool = getPool();
+  if (pool.length < 4) { alert('Забагато фільтрів, оберіть більше країн!'); return; }
+  questions = buildQuestions(pool, qCount);
+  current = 0; score = 0; history = [];
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function restartGame() {
+  startGame();
+}
+
+function goHome() {
+  clearTimer();
+  showScreen('welcome');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id + '-screen').classList.add('active');
+}
+
+// ==================== RENDER ====================
+function renderQuestion() {
+  if (current >= questions.length) { showResults(); return; }
+  answered = false;
+  const q = questions[current];
+
+  // Header
+  document.getElementById('q-counter').textContent = `Питання ${current + 1} / ${questions.length}`;
+  const pct = score > 0 ? Math.round(score / current * 100) : 0;
+  document.getElementById('correct-rate').textContent = current > 0 ? `${pct}% правильно` : '';
+  document.getElementById('progress-fill').style.width = `${(current / questions.length) * 100}%`;
+  document.getElementById('score-live').textContent = score;
+
+  // Streak
+  renderStreak();
+
+  // Card
+  const card = document.getElementById('question-card');
+  card.classList.remove('shake');
+  card.classList.add('pop');
+  setTimeout(() => card.classList.remove('pop'), 300);
+
+  if (q.type === 'flag') {
+    document.getElementById('q-type-badge').textContent = '🚩 Прапор країни';
+    document.getElementById('flag-display').style.display = 'block';
+    document.getElementById('flag-display').textContent = q.country.f;
+    document.getElementById('capital-display').style.display = 'none';
+    document.getElementById('q-instruction').textContent = 'Яка це країна?';
+  } else {
+    document.getElementById('q-type-badge').textContent = '🏛️ Столиця країни';
+    document.getElementById('flag-display').style.display = 'none';
+    document.getElementById('capital-display').style.display = 'block';
+    document.getElementById('capital-display').textContent = q.country.c;
+    document.getElementById('q-instruction').textContent = 'Столиця якої країни?';
+  }
+
+  // Options / Hard input
+  const grid = document.getElementById('options-grid');
+  const hardWrap = document.getElementById('hard-input-wrap');
+  grid.innerHTML = '';
+
+  if (hardMode) {
+    grid.style.display = 'none';
+    hardWrap.style.display = 'flex';
+    const inp = document.getElementById('hard-input');
+    inp.value = '';
+    inp.className = 'hard-input';
+    inp.disabled = false;
+    document.getElementById('hard-submit').disabled = false;
+    document.getElementById('hard-hint').textContent = '⌨️ Натисни Enter або кнопку — допускаються невеликі помилки';
+    document.getElementById('autocomplete-list').style.display = 'none';
+    document.getElementById('autocomplete-list').innerHTML = '';
+    setTimeout(() => inp.focus(), 100);
+    inp.oninput = () => updateAutocomplete(inp.value);
+    inp.onkeydown = (e) => { if (e.key === 'Enter') submitHardAnswer(); if (e.key === 'ArrowDown') focusAC(0); };
+  } else {
+    grid.style.display = 'grid';
+    hardWrap.style.display = 'none';
+    const letters = ['A', 'B', 'C', 'D'];
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.onclick = () => selectAnswer(btn, opt, q);
+      btn.innerHTML = `
+        <span class="opt-letter">${letters[i]}</span>
+        ${q.type === 'capital' ? `<span class="option-flag">${opt.f}</span>` : ''}
+        <span>${opt.n}</span>
+      `;
+      grid.appendChild(btn);
+    });
+  }
+
+  // Timer
+  startTimer();
+}
+
+function renderStreak() {
+  const bar = document.getElementById('streak-bar');
+  bar.innerHTML = '';
+  history.forEach(h => {
+    const dot = document.createElement('div');
+    dot.className = 'streak-dot ' + (h.correct ? 'correct' : 'wrong');
+    dot.textContent = h.correct ? '✓' : '✗';
+    bar.appendChild(dot);
+  });
+}
+
+// ==================== TIMER ====================
+function startTimer() {
+  clearTimer();
+  timerVal = hardMode ? TIMER_MAX_HARD : TIMER_MAX;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timerVal--;
+    updateTimerUI();
+    if (timerVal <= 0) { clearTimer(); timeOut(); }
+  }, 1000);
+}
+
+function clearTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function updateTimerUI() {
+  const circle = document.getElementById('timer-circle');
+  const text = document.getElementById('timer-text');
+  const max = hardMode ? TIMER_MAX_HARD : TIMER_MAX;
+  const offset = CIRCUMFERENCE * (1 - timerVal / max);
+  circle.style.strokeDasharray = CIRCUMFERENCE;
+  circle.style.strokeDashoffset = offset;
+  circle.style.stroke = timerVal <= 5 ? '#ef4444' : timerVal <= 8 ? '#f59e0b' : 'var(--gold)';
+  text.textContent = timerVal;
+  text.style.color = timerVal <= 5 ? '#ef4444' : 'var(--gold)';
+}
+
+function timeOut() {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  if (hardMode) {
+    const inp = document.getElementById('hard-input');
+    inp.disabled = true;
+    inp.className = 'hard-input wrong';
+    inp.value = '';
+    document.getElementById('hard-submit').disabled = true;
+    document.getElementById('autocomplete-list').style.display = 'none';
+    document.getElementById('hard-hint').textContent = `❌ Правильна відповідь: ${q.country.n}`;
+  } else {
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.disabled = true;
+      const name = btn.querySelector('span:last-child').textContent;
+      if (name === q.country.n) btn.classList.add('correct');
+    });
+  }
+  history.push({ correct: false, country: q.country, type: q.type, chosen: null });
+  showFeedback(false, '⏱️ Час вийшов!');
+  setTimeout(nextQuestion, 2000);
+}
+
+// ==================== HARD MODE LOGIC ====================
+function normalizeStr(s) {
+  return s.toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[-–—]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Build aliases: short names map to full names
+const ALIASES = {
+  'сша': 'США', 'usa': 'США', 'америка': 'США',
+  'пар': 'ПАР', 'пдафр': 'ПАР',
+  'оае': 'ОАЕ', 'оаэ': 'ОАЕ', 'еміра': 'ОАЕ',
+  'пд корея': 'Пд. Корея', 'пд. корея': 'Пд. Корея', 'південна корея': 'Пд. Корея', 'корея': 'Пд. Корея',
+  'пн корея': 'Пн. Корея', 'пн. корея': 'Пн. Корея', 'північна корея': 'Пн. Корея',
+  'цар': 'ЦАР',
+  'велика британія': 'Велика Британія', 'британія': 'Велика Британія', 'англія': 'Велика Британія', 'uk': 'Велика Британія',
+  'пн македонія': 'Пн. Македонія', 'північна македонія': 'Пн. Македонія', 'македонія': 'Пн. Македонія',
+  'боснія': 'Боснія і Герц.', 'боснія і герцеговина': 'Боснія і Герц.',
+  'екваторіальна гвінея': 'Екв. Гвінея', 'екв гвінея': 'Екв. Гвінея',
+  'сан томе': 'Сан-Томе і Прінсіпі', 'сан томе і прінсіпі': 'Сан-Томе і Прінсіпі',
+  'конго': 'Республіка Конго', 'республіка конго': 'Республіка Конго',
+  'др конго': 'ДР Конго', 'демократична республіка конго': 'ДР Конго', 'конго дем': 'ДР Конго',
+  'коморські острови': 'Коморські о-ви', 'комори': 'Коморські о-ви',
+  'маршаллові острови': 'Маршаллові о-ви', 'маршалли': 'Маршаллові о-ви',
+  'соломонові острови': 'Соломонові о-ви',
+  'сейшели': 'Сейшельські о-ви', 'сейшельські острови': 'Сейшельські о-ви',
+  'багами': 'Багамські о-ви', 'багамські острови': 'Багамські о-ви',
+  'папуа': 'Папуа Нова Гвінея', 'пнг': 'Папуа Нова Гвінея',
+  'нова зеландія': 'Нова Зеландія', 'нз': 'Нова Зеландія',
+  'тімор': 'Тімор-Лешті', 'східний тімор': 'Тімор-Лешті',
+  "котдівуар": "Кот-д'Івуар", 'кот дівуар': "Кот-д'Івуар",
+  'кабо верде': 'Кабо-Верде',
+  'пд судан': 'Пд. Судан', 'пд. судан': 'Пд. Судан', 'південний судан': 'Пд. Судан',
+  'антигуа': 'Антигуа і Барбуда',
+  'сент вінсент': 'Сент-Вінсент', 'сент-вінсент і гренадини': 'Сент-Вінсент',
+  'сент кітс': 'Сент-Кітс і Невіс', 'сент кітс і невіс': 'Сент-Кітс і Невіс',
+  'сент люсія': 'Сент-Люсія',
+  'тринідад': 'Тринідад і Тобаго',
+  'мікронезія': 'Мікронезія',
+  'єменʼ': 'Єменʼ', 'ємен': 'Єменʼ', 'йємен': 'Єменʼ',
+};
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_, i) => Array.from({length: n+1}, (_, j) => i || j));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function isMatch(typed, correct) {
+  const t = normalizeStr(typed);
+  const c = normalizeStr(correct);
+  if (!t) return false;
+  // Direct or alias match
+  if (t === c) return true;
+  const aliasTarget = ALIASES[t];
+  if (aliasTarget && normalizeStr(aliasTarget) === c) return true;
+  // Substring: typed is contained in correct (handles abbreviations like "пд. корея")
+  if (c.includes(t) && t.length >= 4) return true;
+  // Levenshtein: allow 1 error per 6 chars
+  const maxDist = Math.floor(Math.max(t.length, c.length) / 6);
+  return levenshtein(t, c) <= Math.max(1, maxDist);
+}
+
+function updateAutocomplete(val) {
+  const list = document.getElementById('autocomplete-list');
+  const pool = getPool();
+  if (val.length < 2) { list.style.display = 'none'; list.innerHTML = ''; return; }
+  const norm = normalizeStr(val);
+  const matches = pool.filter(c => {
+    const cn = normalizeStr(c.n);
+    return cn.startsWith(norm) || cn.includes(norm) || levenshtein(norm, cn.slice(0, norm.length)) <= 1;
+  }).slice(0, 6);
+  if (!matches.length) { list.style.display = 'none'; list.innerHTML = ''; return; }
+  list.innerHTML = '';
+  list.style.display = 'block';
+  matches.forEach((c, idx) => {
+    const item = document.createElement('div');
+    item.className = 'ac-item';
+    item.dataset.idx = idx;
+    item.innerHTML = `<span class="ac-flag">${c.f}</span><span>${c.n}</span>`;
+    item.onclick = () => { document.getElementById('hard-input').value = c.n; list.style.display = 'none'; list.innerHTML = ''; submitHardAnswer(); };
+    list.appendChild(item);
+  });
+}
+
+function focusAC(idx) {
+  const items = document.querySelectorAll('.ac-item');
+  if (!items.length) return;
+  items.forEach(i => i.classList.remove('focused'));
+  const target = items[Math.min(idx, items.length-1)];
+  target.classList.add('focused');
+  target.onkeydown = (e) => {
+    if (e.key === 'Enter') target.click();
+    if (e.key === 'ArrowDown') focusAC(idx + 1);
+    if (e.key === 'ArrowUp') { if (idx > 0) focusAC(idx - 1); else document.getElementById('hard-input').focus(); }
+  };
+  target.focus();
+}
+
+function submitHardAnswer() {
+  if (answered) return;
+  const q = questions[current];
+  const inp = document.getElementById('hard-input');
+  const typed = inp.value.trim();
+  if (!typed) { inp.focus(); return; }
+
+  answered = true;
+  clearTimer();
+  document.getElementById('autocomplete-list').style.display = 'none';
+  inp.disabled = true;
+  document.getElementById('hard-submit').disabled = true;
+
+  const isCorrect = isMatch(typed, q.country.n);
+  if (isCorrect) score++;
+
+  inp.className = 'hard-input ' + (isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    document.getElementById('hard-hint').textContent = `✗ Правильна відповідь: ${q.country.n}`;
+    document.getElementById('question-card').classList.add('shake');
+  } else {
+    document.getElementById('hard-hint').textContent = `✓ ${q.country.n} ${q.country.f}`;
+  }
+
+  history.push({ correct: isCorrect, country: q.country, type: q.type, chosen: { n: typed } });
+  showFeedback(isCorrect, isCorrect ? getCorrectMsg() : `✗ ${q.country.n}`);
+  setTimeout(nextQuestion, isCorrect ? 1200 : 2200);
+}
+
+// ==================== ANSWER ====================
+function selectAnswer(btn, opt, q) {
+  if (answered) return;
+  answered = true;
+  clearTimer();
+  const isCorrect = opt.n === q.country.n;
+  if (isCorrect) score++;
+
+  // Style buttons
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    const name = b.querySelector('span:last-child').textContent;
+    if (name === q.country.n) b.classList.add('correct');
+  });
+  if (!isCorrect) {
+    btn.classList.add('wrong');
+    document.getElementById('question-card').classList.add('shake');
+  }
+
+  history.push({ correct: isCorrect, country: q.country, type: q.type, chosen: opt });
+  showFeedback(isCorrect, isCorrect ? getCorrectMsg() : `✗ ${q.country.n} — ${q.country.c}`);
+  setTimeout(nextQuestion, isCorrect ? 1200 : 2000);
+}
+
+function getCorrectMsg() {
+  const msgs = ['✓ Правильно!', '✓ Чудово!', '✓ Молодець!', '✓ Так!', '✓ Бравo!'];
+  return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+function showFeedback(correct, text) {
+  const overlay = document.getElementById('feedback-overlay');
+  const bubble = document.getElementById('feedback-bubble');
+  bubble.textContent = text;
+  bubble.className = 'feedback-bubble ' + (correct ? 'correct' : 'wrong');
+  overlay.classList.add('show');
+  setTimeout(() => overlay.classList.remove('show'), 900);
+}
+
+function nextQuestion() {
+  current++;
+  renderQuestion();
+}
+
+// ==================== RESULTS ====================
+function showResults() {
+  showScreen('results');
+  const total = questions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = total - score;
+  document.getElementById('r-pct').textContent = pct + '%';
+
+  let emoji, title, sub;
+  if (pct >= 90) { emoji = '🏆'; title = 'Геніально!'; sub = 'Ти — справжній знавець географії світу!'; }
+  else if (pct >= 75) { emoji = '🌟'; title = 'Чудово!'; sub = 'Відмінний результат! Ще трохи — і ти чемпіон!'; }
+  else if (pct >= 55) { emoji = '👍'; title = 'Непогано!'; sub = 'Хороший результат. Є куди рости!'; }
+  else if (pct >= 35) { emoji = '📚'; title = 'Потрібно вчити!'; sub = 'Ще трохи практики — і буде набагато краще!'; }
+  else { emoji = '🌍'; title = 'Починай спочатку!'; sub = 'Вивчай прапори та столиці — вони цікавіші, ніж здається!'; }
+
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent = sub;
+
+  // History
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+  history.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'hist-item ' + (h.correct ? 'correct' : 'wrong');
+    const what = h.type === 'flag' ? `${h.country.f} прапор` : `Столиця: ${h.country.c}`;
+    const chosenStr = h.chosen ? h.chosen.n : '— час вийшов —';
+    div.innerHTML = `
+      <span class="hist-flag">${h.country.f}</span>
+      <div class="hist-text">
+        <div><strong>${h.country.n}</strong></div>
+        <div class="hist-answer">${what}${!h.correct ? ` • Обрано: ${chosenStr}` : ''}</div>
+      </div>
+      <span class="hist-icon">${h.correct ? '✅' : '❌'}</span>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ==================== INIT ====================
+// Set default selections visually
+selectMode('flags');
+selectAll();
+selectQCount(20);
+</script>
+</body>
+</html>
